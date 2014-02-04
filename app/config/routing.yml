@@ -1,7 +1,3 @@
 test:
     resource: "@TestBundle/Resources/config/routing.yml"
     prefix:   /
-
-_welcome:
-    pattern:  /
-    defaults: { _controller: AcmeDemoBundle:Welcome:index }
