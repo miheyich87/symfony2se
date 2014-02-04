@@ -1,0 +1,33 @@
+{% block extends %}
+{{ "{% extends '::base.bs.html.twig' %}" }}
+{% endblock extends %}
+
+{{ "{% block title -%}" }}{{ entity }}{{ "{% endblock %}" }}
+{{ "{% block body_heading -%}" }}<div class="panel-heading">{{ entity }}</div>{{ "{% endblock %}" }}
+
+{% block body %}
+{{ "{% block body -%}" }}
+
+    <dl class="dl-horizontal">
+	{%- for field, metadata in fields %}
+                <dt>{{ field|capitalize }}</dt>
+
+            {%- if metadata.type in ['date', 'datetime'] %}
+
+                <dd>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}' }}</dd>
+
+            {%- else %}
+
+                <dd>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ ' }}' }}</dd>
+
+            {%- endif %}
+	{%- endfor %}
+	</dl>
+
+{{ "{% endblock %}" }}
+{% endblock body %}
+
+{{ "{% block body_footer -%}" }}
+	{% set hide_edit, hide_delete = false, false %}
+    {% include 'crud/views/others/record_actions.bs.html.twig.twig' %}
+{{ "{% endblock %}" }}

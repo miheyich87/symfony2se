@@ -43,6 +43,7 @@ class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
                 new InputOption('with-write', '', InputOption::VALUE_NONE, 'Whether or not to generate create, new and delete actions'),
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
                 new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if crud controller already exist, thus overwriting all generated files'),
+                new InputOption('bootstrap', '', InputOption::VALUE_NONE, 'Use bootstrap styles'),
             ))
             ->setDescription('Generates a CRUD based on a Doctrine entity')
             ->setHelp(<<<EOT
@@ -97,6 +98,7 @@ EOT
         $prefix = $this->getRoutePrefix($input, $entity);
         $withWrite = $input->getOption('with-write');
         $forceOverwrite = $input->getOption('overwrite');
+        $useBootstrap = $input->getOption('bootstrap');
 
         $dialog->writeSection($output, 'CRUD generation');
 
@@ -105,7 +107,7 @@ EOT
         $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
 
         $generator = $this->getGenerator($bundle);
-        $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite);
+        $generator->generate($bundle, $entity, $metadata[0], $format, $prefix, $withWrite, $forceOverwrite, $useBootstrap);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
 

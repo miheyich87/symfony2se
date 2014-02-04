@@ -1,0 +1,33 @@
+{% extends '::base.bs.html.twig' %}
+
+{% block title %}Symfony 2 SE{% endblock %}
+{% block body_heading -%}<div class="panel-heading">Symfony 2 with Bootstrap 3.0 styles</div>{% endblock %}
+
+{% block body -%}
+	<p>
+	For generate CRUD with Bootstrap 3.0 styles use option --bootstrap:<br />
+	<code>$ php app/console doctrine:generate:crud --entity=TestBundle:Hello --route-prefix=hello --with-write --format=yml --overwrite --bootstrap</code>
+	</p>
+	
+	<p>
+	Bootstrap layout described in:<br />
+	<code>app/Resources/base.bs.html.twig</code>
+	</p>
+	
+	<p>
+	Bootstrap widgets blocks described in:<br />
+	<code>app/Resources/fields.bs.html.twig</code>
+	</p>
+	
+	<p>
+	Bootstrap menu block described in:<br />
+	<code>app/Resources/menu.bs.html.twig</code>
+	</p>
+	
+{% endblock %}
+
+{% block body_footer -%}
+	<div class="panel-footer">
+		Symfony 2 "Slowpoke" Edition
+	</div>
+{% endblock %}

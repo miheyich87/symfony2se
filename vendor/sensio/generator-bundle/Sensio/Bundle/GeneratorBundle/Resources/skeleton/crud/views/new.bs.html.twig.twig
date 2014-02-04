@@ -1,0 +1,20 @@
+{% block extends %}
+{{ "{% extends '::base.bs.html.twig' %}" }}
+{% endblock extends %}
+
+{{ "{% form_theme form 'fields.bs.html.twig' %}" }}
+{{ "{% block title -%}" }}{{ entity }} creation{{ "{% endblock %}" }}
+{{ "{% block body_heading -%}" }}<div class="panel-heading">{{ entity }} creation</div>{{ "{% endblock %}" }}
+
+{% block body %}
+{{ "{% block body -%}" }}
+    
+    {{ '{{ form(form) }}' }}
+
+{{ "{% endblock %}" }}
+{% endblock body %}
+
+{{ "{% block body_footer -%}" }}
+	{% set hide_edit, hide_delete = true, true %}
+	{% include 'crud/views/others/record_actions.bs.html.twig.twig' %}
+{{ "{% endblock %}" }}

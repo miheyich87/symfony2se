@@ -1,0 +1,64 @@
+{% block extends %}
+{{ "{% extends '::base.bs.html.twig' %}" }}
+{% endblock extends %}
+
+{{ "{% block title -%}" }}{{ entity }} list{{ "{% endblock %}" }}
+{{ "{% block body_heading -%}" }}<div class="panel-heading">{{ entity }} list</div>{{ "{% endblock %}" }}
+
+{% block body %}
+{{ "{% block body -%}" }}
+    <table class="records_list table table-hover">
+        <thead>
+            <tr>
+            {%- for field, metadata in fields %}
+
+                <th>{{ field|capitalize }}</th>
+
+            {%- endfor %}
+
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{ '{% for entity in entities %}' }}
+            <tr>
+
+        {%- for field, metadata in fields %}
+            {%- if loop.first and ('show' in actions) %}
+
+                <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': entity.id }) }}" }}">{{ '{{ entity.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
+
+            {%- elseif metadata.type in ['date', 'datetime'] %}
+
+                <td>{{ '{% if entity.' ~ field|replace({'_': ''}) ~ ' %}{{ entity.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
+
+            {%- else %}
+
+                <td>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+
+            {%- endif %}
+
+            {%- if loop.last %}
+
+                <td>
+                    {%- include "crud/views/others/actions.bs.html.twig.twig" %}
+                </td>
+
+            {%- endif %}
+        {%- endfor %}
+
+            </tr>
+        {{ '{% endfor %}' }}
+        </tbody>
+    </table>
+
+{{ "{% endblock %}" }}
+{% endblock body %}
+
+{% if 'new' in actions %}
+{{ "{% block body_footer -%}" }}
+	<div class="panel-footer">
+		<a class="btn btn-default" rel="tooltip" title="Create a new entry" href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}">Create a new entry</a>
+	</div>
+{{ "{% endblock %}" }}
+{% endif %}

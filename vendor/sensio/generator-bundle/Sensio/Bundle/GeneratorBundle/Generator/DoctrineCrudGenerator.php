@@ -53,7 +53,7 @@ class DoctrineCrudGenerator extends Generator
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite)
+    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $needWriteActions, $forceOverwrite, $useBootstrap)
     {
         $this->routePrefix = $routePrefix;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
@@ -80,18 +80,30 @@ class DoctrineCrudGenerator extends Generator
             $this->filesystem->mkdir($dir, 0777);
         }
 
-        $this->generateIndexView($dir);
+        if (!$useBootstrap)
+			$this->generateIndexView($dir);
+		else
+			$this->generateIndexViewBootstrap($dir);
 
         if (in_array('show', $this->actions)) {
-            $this->generateShowView($dir);
+            if (!$useBootstrap)
+				$this->generateShowView($dir);
+			else
+				$this->generateShowViewBootstrap($dir);
         }
 
         if (in_array('new', $this->actions)) {
-            $this->generateNewView($dir);
+            if (!$useBootstrap)
+				$this->generateNewView($dir);
+			else
+				$this->generateNewViewBootstrap($dir);
         }
 
         if (in_array('edit', $this->actions)) {
-            $this->generateEditView($dir);
+            if (!$useBootstrap)
+				$this->generateEditView($dir);
+			else
+				$this->generateEditViewBootstrap($dir);
         }
 
         $this->generateTestClass();
@@ -207,6 +219,24 @@ class DoctrineCrudGenerator extends Generator
     }
 
     /**
+     * Generates the index.html.twig template in the final bundle with Bootstrap 3.0 styles.
+     *
+     * @param string $dir The path to the folder that hosts templates in the bundle
+     */
+    protected function generateIndexViewBootstrap($dir)
+    {
+        $this->renderFile('crud/views/index.bs.html.twig.twig', $dir.'/index.html.twig', array(
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
+            'fields'            => $this->metadata->fieldMappings,
+            'actions'           => $this->actions,
+            'record_actions'    => $this->getRecordActions(),
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+        ));
+    }
+	
+	/**
      * Generates the index.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
@@ -229,6 +259,23 @@ class DoctrineCrudGenerator extends Generator
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
      */
+    protected function generateShowViewBootstrap($dir)
+    {
+        $this->renderFile('crud/views/show.bs.html.twig.twig', $dir.'/show.html.twig', array(
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
+            'fields'            => $this->metadata->fieldMappings,
+            'actions'           => $this->actions,
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+        ));
+    }
+	
+	/**
+     * Generates the show.html.twig template in the final bundle.
+     *
+     * @param string $dir The path to the folder that hosts templates in the bundle
+     */
     protected function generateShowView($dir)
     {
         $this->renderFile('crud/views/show.html.twig.twig', $dir.'/show.html.twig', array(
@@ -242,6 +289,22 @@ class DoctrineCrudGenerator extends Generator
     }
 
     /**
+     * Generates the new.html.twig template in the final bundle with Bootstrap 3.0 styles.
+     *
+     * @param string $dir The path to the folder that hosts templates in the bundle
+     */
+    protected function generateNewViewBootstrap($dir)
+    {
+        $this->renderFile('crud/views/new.bs.html.twig.twig', $dir.'/new.html.twig', array(
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+            'actions'           => $this->actions,
+        ));
+    }
+	
+	/**
      * Generates the new.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
@@ -258,6 +321,22 @@ class DoctrineCrudGenerator extends Generator
     }
 
     /**
+     * Generates the edit.html.twig template in the final bundle with Bootstrap 3.0 styles.
+     *
+     * @param string $dir The path to the folder that hosts templates in the bundle
+     */
+    protected function generateEditViewBootstrap($dir)
+    {
+        $this->renderFile('crud/views/edit.bs.html.twig.twig', $dir.'/edit.html.twig', array(
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+            'entity'            => $this->entity,
+            'bundle'            => $this->bundle->getName(),
+            'actions'           => $this->actions,
+        ));
+    }
+	
+	/**
      * Generates the edit.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
